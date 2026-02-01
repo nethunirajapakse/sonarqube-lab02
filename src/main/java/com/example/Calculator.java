@@ -1,38 +1,33 @@
-package main.java.com.example;
+package com.example;
 
 public class Calculator {
 
-    // Code Smell: Long method + high complexity
-    public int calculate(int a, int b, String op) {
+    public enum Operation {
+        ADD, SUB, MUL, DIV, MOD, POW
+    }
 
-        if(op.equals("add")) {
-            return a + b;
-        }
-        if(op.equals("sub")) {
-            return a - b;
-        }
-        if(op.equals("mul")) {
-            return a * b;
-        }
-        if(op.equals("div")) {
-            if(b == 0) {
-                return 0;
+    public int calculate(int a, int b, Operation op) {
+
+        return switch (op) {
+            case ADD -> a + b;
+            case SUB -> a - b;
+            case MUL -> a * b;
+            case DIV -> {
+                if (b == 0) {
+                    throw new IllegalArgumentException("Division by zero");
+                }
+                yield a / b;
             }
-            return a / b;
-        }
-        if(op.equals("mod")) {
-            return a % b;
-        }
-
-        return 0;
+            case MOD -> a % b;
+            case POW -> power(a, b);
+        };
     }
 
-    // Code Duplication (students must remove)
-    public int addNumbers(int x, int y) {
-        return x + y;
-    }
-
-    public int sumValues(int a, int b) {
-        return a + b;
+    private int power(int a, int b) {
+        int result = 1;
+        for (int i = 0; i < b; i++) {
+            result *= a;
+        }
+        return result;
     }
 }
