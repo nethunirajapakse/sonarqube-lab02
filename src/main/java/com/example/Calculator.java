@@ -1,42 +1,33 @@
-package main.java.com.example;
+package com.example;
 
 public class Calculator {
 
-    // Code Smell: Long method + high complexity
-    // EVEN WORSE: longer, more complex, duplicated logic
-    public int calculate(int a, int b, String op) {
-
-        if (op.equals("add")) {
-            return a + b;
-        } else if (op.equals("add-again")) {
-            return a + b; // DUPLICATION
-        } else if (op.equals("sub")) {
-            return a - b;
-        } else if (op.equals("sub-again")) {
-            return a - b; // DUPLICATION
-        } else if (op.equals("mul")) {
-            return a * b;
-        } else if (op.equals("div")) {
-            if (b == 0) {
-                return 0;
-            } else {
-                return a / b;
-            }
-        } else if (op.equals("mod")) {
-            return a % b;
-        } else if (op.equals("pow")) {
-            int result = 1;
-            for (int i = 0; i < b; i++) {
-                result = result * a;
-            }
-            return result;
-        } else {
-            return 0;
-        }
+    public enum Operation {
+        ADD, SUB, MUL, DIV, MOD, POW
     }
 
-    // INTENTIONAL DUPLICATION
-    public int addAgain(int a, int b) {
-        return a + b;
+    public int calculate(int a, int b, Operation op) {
+
+        return switch (op) {
+            case ADD -> a + b;
+            case SUB -> a - b;
+            case MUL -> a * b;
+            case DIV -> {
+                if (b == 0) {
+                    throw new IllegalArgumentException("Division by zero");
+                }
+                yield a / b;
+            }
+            case MOD -> a % b;
+            case POW -> power(a, b);
+        };
+    }
+
+    private int power(int a, int b) {
+        int result = 1;
+        for (int i = 0; i < b; i++) {
+            result *= a;
+        }
+        return result;
     }
 }
